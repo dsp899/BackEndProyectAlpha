@@ -1,54 +1,53 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.awt.*;
-import java.util.Date;
+import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Offers {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOffers;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private String enterpriseName;
     private String offerName;
     private String responsibility;
-    private String requirements;
+    private String requeriments;
     private String summary;
-    private Tecnologies[] tecnologies;
-    private String direction;
-    private Integer telephoneNumber;
-    private String salary;
-    private String modality;
-    private Date date;
+
+    @ManyToMany
+    @JoinTable(name="Offers_has_Technologies"
+            ,joinColumns = @JoinColumn(name="offers_id")
+            ,inverseJoinColumns = @JoinColumn(name="tecnologies_id")
+    )
+    private Set<Technologies> tecnologies;
+
+    @JoinColumn(name="configuration_id",unique = true)
+    @OneToMany(cascade=CascadeType.ALL)
+    private Configuration configuration;
 
     public Offers() {
     }
 
-    public Offers(Long idOffers, String enterpriseName, String offerName, String responsibility, String requirements, String summary, Tecnologies[] tecnologies, String direction, Integer telephoneNumber, String salary, String modality, Date date) {
-        this.idOffers = idOffers;
+    public Offers(Long id, String enterpriseName, String offerName, String responsibility, String requeriments, String summary, Set<Technologies> tecnologies, Configuration configuration) {
+        this.id = id;
         this.enterpriseName = enterpriseName;
         this.offerName = offerName;
         this.responsibility = responsibility;
-        this.requirements = requirements;
+        this.requeriments = requeriments;
         this.summary = summary;
         this.tecnologies = tecnologies;
-        this.direction = direction;
-        this.telephoneNumber = telephoneNumber;
-        this.salary = salary;
-        this.modality = modality;
-        this.date = date;
+        this.configuration = configuration;
     }
 
-    public Long getIdOffers() {
-        return idOffers;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdOffers(Long idOffers) {
-        this.idOffers = idOffers;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEnterpriseName() {
@@ -75,12 +74,12 @@ public class Offers {
         this.responsibility = responsibility;
     }
 
-    public String getRequirements() {
-        return requirements;
+    public String getRequeriments() {
+        return requeriments;
     }
 
-    public void setRequirements(String requirements) {
-        this.requirements = requirements;
+    public void setRequeriments(String requeriments) {
+        this.requeriments = requeriments;
     }
 
     public String getSummary() {
@@ -91,51 +90,34 @@ public class Offers {
         this.summary = summary;
     }
 
-    public Tecnologies[] getTecnologies() {
+    public Set<Technologies> getTecnologies() {
         return tecnologies;
     }
 
-    public void setTecnologies(Tecnologies[] tecnologies) {
+    public void setTecnologies(Set<Technologies> tecnologies) {
         this.tecnologies = tecnologies;
     }
 
-    public String getDirection() {
-        return direction;
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
-    public Integer getTelephoneNumber() {
-        return telephoneNumber;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offers offers = (Offers) o;
+        return id.equals(offers.id);
     }
 
-    public void setTelephoneNumber(Integer telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
-    }
-
-    public String getSalary() {
-        return salary;
-    }
-
-    public void setSalary(String salary) {
-        this.salary = salary;
-    }
-
-    public String getModality() {
-        return modality;
-    }
-
-    public void setModality(String modality) {
-        this.modality = modality;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
+
+
