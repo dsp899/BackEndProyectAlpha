@@ -1,10 +1,9 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Offers")
@@ -23,12 +22,19 @@ public class Offer {
     private String modality;
     private Date date;
     private String location;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+
+    @JsonManagedReference
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="Offers_has_Technologies"
             ,joinColumns = @JoinColumn(name="offers_id")
             ,inverseJoinColumns = @JoinColumn(name="technologies_id")
     )
-    private Set<Technology> technologies = new HashSet<>();
+    private List<Technology> technologies = new ArrayList<>();
+
+    public void addTechnologies(Technology technology){
+        technologies.add(technology);
+        technology.getOffers().add(this);
+    }
 
 
     public Offer() {
@@ -127,30 +133,21 @@ public class Offer {
         this.location = location;
     }
 
-    public Set<Technology> getTechnologies() {
+    public List<Technology> getTechnologies() {
         return technologies;
     }
 
-    public void addTechnologies(Technology technology) {
-        technologies.add(technology);
-        technology.getOffers().add(this);
+    public void setTechnologies(List<Technology> technologies) {
+        this.technologies = technologies;
     }
 
-    //public Configuration getConfiguration() {
-    //    return configuration;
-    //}
-
-    //public void setConfiguration(Configuration configuration) {
-    //    this.configuration = configuration;
-    //}
-
-    /*@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Offer offers = (Offer) o;
         return id.equals(offers.id);
-    }*/
+    }
 
     @Override
     public int hashCode() {

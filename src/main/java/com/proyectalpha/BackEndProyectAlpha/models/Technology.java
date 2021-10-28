@@ -1,9 +1,9 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Technologies")
@@ -14,8 +14,9 @@ public class Technology {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "technologies", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private Set<Offer> offers = new HashSet<>();
+    @JsonBackReference
+    @ManyToMany(mappedBy = "technologies", cascade = CascadeType.ALL)
+    private List<Offer> offers = new ArrayList<>();
 
     public Technology() {
     }
@@ -41,23 +42,21 @@ public class Technology {
         this.name = name;
     }
 
-    public Set<Offer> getOffers(){
+    public List<Offer> getOffers() {
         return offers;
     }
 
-    public void addOffers(Offer offer) {
-        offers.add(offer);
-        offer.getTechnologies().add(this);
+    public void setOffers(List<Offer> offers) {
+        this.offers = offers;
     }
 
-
-    /*@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Technology that = (Technology) o;
         return id.equals(that.id);
-    }*/
+    }
 
     @Override
     public int hashCode() {
