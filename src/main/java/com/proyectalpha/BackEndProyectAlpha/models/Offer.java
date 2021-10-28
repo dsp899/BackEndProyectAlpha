@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "offers")
+@Table(name = "Offers")
 public class Offer {
 
     @Id
@@ -24,7 +24,7 @@ public class Offer {
     private Date date;
     private String location;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(name="Technologies_Offers"
+    @JoinTable(name="Offers_has_Technologies"
             ,joinColumns = @JoinColumn(name="offers_id")
             ,inverseJoinColumns = @JoinColumn(name="technologies_id")
     )
