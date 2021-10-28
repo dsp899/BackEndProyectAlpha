@@ -1,23 +1,26 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-public class Technologies {
+@Table(name = "technologies")
+public class Technology {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
-    public Technologies() {
+    @ManyToMany(mappedBy = "technologies", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Offer> offers = new HashSet<>();
+
+    public Technology() {
     }
 
-    public Technologies(Long id, String name) {
+    public Technology(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -38,13 +41,23 @@ public class Technologies {
         this.name = name;
     }
 
-    @Override
+    public Set<Offer> getOffers(){
+        return offers;
+    }
+
+    public void addOffers(Offer offer) {
+        offers.add(offer);
+        offer.getTechnologies().add(this);
+    }
+
+
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Technologies that = (Technologies) o;
+        Technology that = (Technology) o;
         return id.equals(that.id);
-    }
+    }*/
 
     @Override
     public int hashCode() {

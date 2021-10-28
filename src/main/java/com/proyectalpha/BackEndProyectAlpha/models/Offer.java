@@ -1,11 +1,14 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Offers {
+@Table(name = "offers")
+public class Offer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,30 +19,32 @@ public class Offers {
     private String responsibility;
     private String requeriments;
     private String summary;
-
-    @ManyToMany
-    @JoinTable(name="Offers_has_Technologies"
+    private String salary;
+    private String modality;
+    private Date date;
+    private String location;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name="Technologies_Offers"
             ,joinColumns = @JoinColumn(name="offers_id")
-            ,inverseJoinColumns = @JoinColumn(name="tecnologies_id")
+            ,inverseJoinColumns = @JoinColumn(name="technologies_id")
     )
-    private Set<Technologies> tecnologies;
+    private Set<Technology> technologies = new HashSet<>();
 
-    @JoinColumn(name="configuration_id",unique = true)
-    @OneToMany(cascade=CascadeType.ALL)
-    private Configuration configuration;
 
-    public Offers() {
+    public Offer() {
     }
 
-    public Offers(Long id, String enterpriseName, String offerName, String responsibility, String requeriments, String summary, Set<Technologies> tecnologies, Configuration configuration) {
+    public Offer(Long id, String enterpriseName, String offerName, String responsibility, String requeriments, String summary, String salary, String modality, Date date, String location) {
         this.id = id;
         this.enterpriseName = enterpriseName;
         this.offerName = offerName;
         this.responsibility = responsibility;
         this.requeriments = requeriments;
         this.summary = summary;
-        this.tecnologies = tecnologies;
-        this.configuration = configuration;
+        this.salary = salary;
+        this.modality = modality;
+        this.date = date;
+        this.location = location;
     }
 
     public Long getId() {
@@ -90,29 +95,62 @@ public class Offers {
         this.summary = summary;
     }
 
-    public Set<Technologies> getTecnologies() {
-        return tecnologies;
+    public String getSalary() {
+        return salary;
     }
 
-    public void setTecnologies(Set<Technologies> tecnologies) {
-        this.tecnologies = tecnologies;
+    public void setSalary(String salary) {
+        this.salary = salary;
     }
 
-    public Configuration getConfiguration() {
-        return configuration;
+    public String getModality() {
+        return modality;
     }
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    public void setModality(String modality) {
+        this.modality = modality;
     }
 
-    @Override
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Set<Technology> getTechnologies() {
+        return technologies;
+    }
+
+    public void addTechnologies(Technology technology) {
+        technologies.add(technology);
+        technology.getOffers().add(this);
+    }
+
+    //public Configuration getConfiguration() {
+    //    return configuration;
+    //}
+
+    //public void setConfiguration(Configuration configuration) {
+    //    this.configuration = configuration;
+    //}
+
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Offers offers = (Offers) o;
+        Offer offers = (Offer) o;
         return id.equals(offers.id);
-    }
+    }*/
 
     @Override
     public int hashCode() {
