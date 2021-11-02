@@ -1,5 +1,6 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Offer {
     private String location;
 
     @JsonManagedReference
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="Offers_has_Technologies"
             ,joinColumns = @JoinColumn(name="offers_id")
@@ -35,6 +37,10 @@ public class Offer {
         technologies.add(technology);
         technology.getOffers().add(this);
     }
+    public void deleteTechnologies() {
+        technologies.clear();
+    }
+
 
 
     public Offer() {

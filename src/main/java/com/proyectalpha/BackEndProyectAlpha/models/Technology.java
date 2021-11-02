@@ -1,10 +1,14 @@
 package com.proyectalpha.BackEndProyectAlpha.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.*;
-
+@Component
+@Scope("prototype")
 @Entity
 @Table(name = "Technologies")
 public class Technology {
